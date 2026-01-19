@@ -7,19 +7,23 @@ class Controller:
     def __init__(self, view: View, model: Model):
         self._view = view
         self._model = model
+        self.anno_scelto = None
+
 
     def handle_grafo(self, e):
         """Callback per il pulsante 'Crea Grafo'."""
         try:
-            anno = int(self._view.txt_anno.value)
+            self.anno_scelto = int(self._view.txt_anno.value)
         except:
             self._view.show_alert("Inserisci un numero valido per l'anno.")
             return
-        if anno < 1950 or anno > 2024:
+        if self.anno_scelto < 1950 or self.anno_scelto > 2024:
             self._view.show_alert("Anno fuori intervallo (1950-2024).")
             return
 
-        self._model.build_weighted_graph(anno)
+        if self.anno_scelto is None:
+            return
+        self._model.build_weighted_graph(self.anno_scelto)
         self._view.lista_visualizzazione_1.controls.clear()
         self._view.lista_visualizzazione_1.controls.append(
             ft.Text(f"Grafo calcolato: {self._model.G.number_of_nodes()} nodi, {self._model.G.number_of_edges()} archi")
